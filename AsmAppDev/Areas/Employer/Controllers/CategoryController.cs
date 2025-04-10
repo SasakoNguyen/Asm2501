@@ -8,16 +8,17 @@ using System.Security.Claims;
 
 namespace AsmAppDev.Areas.Users.Controllers
 {
-    [Area("Employer")]
-    [Authorize(Roles = "Employer")]
+    [Area("Employer")] //  thuộc khu vực employer nhà tuyển dụng 
+    [Authorize(Roles = "Employer")]// chỉ người dùng có vai trò employer mới được truy cập 
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         public CategoryController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork; // tương tác với database
+
         }
-        public IActionResult Index()
+        public IActionResult Index() // hiển thị danh sách 
         {
             var claimIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -32,7 +33,7 @@ namespace AsmAppDev.Areas.Users.Controllers
             // Nếu không có userId, hoặc không tìm thấy categories, trả về View trống hoặc với danh sách rỗng
             return View(new List<Category>());
         }
-        public async Task<IActionResult> ToggleNotification(int id)
+        public async Task<IActionResult> ToggleNotification(int id)// bật tắt thông báo 
         {
             if (id == null)
             {
@@ -51,12 +52,12 @@ namespace AsmAppDev.Areas.Users.Controllers
                 category.NotificationStatus = true;
             }*/
 
-            _unitOfWork.Save();
+            _unitOfWork.Save(); // lưu thay đổi trong databse 
 
             TempData["Success"] = "Notification status delete successfully!";
             return RedirectToAction("Index");
         }
-        public IActionResult Create()
+        public IActionResult Create() // tạo danh mục 
         {
             return View();
         }
@@ -80,7 +81,7 @@ namespace AsmAppDev.Areas.Users.Controllers
             }
             return View();
         }
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int? id) // chỉnh sửa danh mục 
         {
             if (id == null || id == 0)
             {
